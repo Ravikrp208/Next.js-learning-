@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ShoppingBag, Search, Menu, X, User, ArrowRight } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Navbar() {
   const { cartCount, setIsCartOpen } = useCart();
@@ -77,6 +78,9 @@ export default function Navbar() {
             <button className="hidden sm:inline-flex p-2 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition">
               <User className="h-5 w-5" />
             </button>
+
+            {/* Theme Toggle Button */}
+            <ThemeToggle />
 
             {/* Shopping Cart Trigger */}
             <button
