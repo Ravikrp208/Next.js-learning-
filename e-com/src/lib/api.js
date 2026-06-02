@@ -1,8 +1,6 @@
 import axios from "axios";
 
-let api = axios.create({
+export let api = axios.create({
     baseURL: "https://api.team-sync.space",
-    withCredentials: true,  
+    withCredentials: true,
 })  
-
-export default api
