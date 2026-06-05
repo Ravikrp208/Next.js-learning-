@@ -6,5 +6,7 @@ import dotenv from "dotenv";
 const app = express();
 
 
-app.get("/",    )
+app.get("/", (req, res) => {
+    res.send({ message: "Tinay-cat API is running...." });
+});
 export default app; 
