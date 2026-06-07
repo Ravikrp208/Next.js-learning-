@@ -1,22 +1,20 @@
 import express from "express";
 import {
-    createCat,
-    searchCats,
-    getAllCats,
-    getCatById,
-    recommendCats,
-    updateCat,
-    deleteCat
-} from "../controller/cat.controller.ts";
+    createCatController,
+    getAllCatsController,
+    getSingleCatController,
+    searchCatsController,
+    recommendCatsController,
+}             
+    from "../controller/cat.controller.ts";
 
 const router = express.Router();
 
-router.post("/create", createCat);
-router.get("/search/all", searchCats);
-router.get("/", getAllCats);
-router.get("/:id", getCatById);
-router.post("/recommend", recommendCats);
-router.put("/:id", updateCat);
-router.delete("/:id", deleteCat);
+router.post("/create", createCatController);
+router.get("/search/all", searchCatsController);
+router.get("/recommend", recommendCatsController);
+router.get("/", getAllCatsController);
+router.get("/:id", getSingleCatController);
 
 export default router;
+

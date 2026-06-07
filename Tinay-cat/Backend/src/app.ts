@@ -1,17 +1,19 @@
-import express from "express";
-import dotenv from "dotenv";
+import express, { type Request, type Response } from "express";
 import catRoutes from "./routes/cat.routes.ts";
-
-dotenv.config();
-
+    
 const app = express();
-
 app.use(express.json());
 
-app.get("/", (req, res) => {
-    res.send({ message: "Tinay-cat API is running...." });
+app.get("/", (req: Request, res: Response) => {
+    res.send(
+        {
+            success: true,
+            message: "Tinay-cat API is running....",
+        });
+
 });
 
-app.use("/cat", catRoutes);
+app.use("/api/cats", catRoutes);
+
 
 export default app;
