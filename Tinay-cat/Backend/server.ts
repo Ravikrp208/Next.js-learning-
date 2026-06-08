@@ -1,11 +1,12 @@
 import app from "./src/app.ts";
 import dotenv from "dotenv";
-import connectDB from "./src/config/db.ts";
+import { connectDb } from "./src/config/db.ts";
+
 
 dotenv.config();
 
 
-connectDB();    
+connectDb();    
 
 const PORT = process.env.PORT || 3000;
 
