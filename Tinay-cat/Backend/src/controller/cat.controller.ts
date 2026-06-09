@@ -40,27 +40,41 @@ export const getSingleCatController = async (req: Request, res: Response) => {
 };
 
 export const searchCatController = async (req: Request, res: Response) => {
-  let q = req.query.q as string;
+  try {
+    const q = (req.query.q as string) || "";
+    console.log(q);
 
-  console.log(q);
+    const result = await searchCatsService(q);
 
-  let result = await searchCatsService(q);
-
-  return res.status(200).json({
-    success: true,
-    message: "Cats fetched",
-    data: result,
-  });
+    return res.status(200).json({
+      success: true,
+      message: "Cats fetched",
+      data: result,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Failed to search cats",
+    });
+  }
 };
 
 export const recommendCatsController = async (req: Request, res: Response) => {
-  const { kidsFriendly, apartmentFriendly } = req.body;
+  try {
+    const kidsFriendly = req.body?.kidsFriendly === true || req.body?.kidsFriendly === "true";
+    const apartmentFriendly = req.body?.apartmentFriendly === true || req.body?.apartmentFriendly === "true";
 
-  const result = await recommendService(kidsFriendly, apartmentFriendly);
+    const result = await recommendService(kidsFriendly, apartmentFriendly);
 
-  return res.status(200).json({
-    success: true,
-    message: "Cat fetched",
-    data: result,
-  });
+    return res.status(200).json({
+      success: true,
+      message: "Cat fetched",
+      data: result,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Failed to recommend cats",
+    });
+  }
 };

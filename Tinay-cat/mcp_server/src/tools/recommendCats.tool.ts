@@ -1,17 +1,23 @@
 import axios from "axios";
 
-const recommendCatsTool = async (
+export const recommendCatsTool = async (
     kidsFriendly: boolean,
-    apartmentFriendly: boolean,
+    apartmentFriendly: boolean
 ) => {
-    
-        const response = await axios.post("http://localhost:3000/api/aiRecommend",   
-        { 
-         kids: kidsFriendly,
-         apartmentFriendly: apartmentFriendly
-         });
+    const res = await axios.post("http://localhost:3000/api/cats/Recommend", {
+        kidsFriendly,
+        apartmentFriendly,
+    });
 
-         return response.data;
+    return res.data;
+};
 
-}
+//search tool
+export const getAllCatsTool = async () => {
+    const res = await axios.get("http://localhost:3000/api/cats");
+
+    return res.data;
+};
+
+
 export default recommendCatsTool;   
