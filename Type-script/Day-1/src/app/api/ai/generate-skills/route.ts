@@ -30,9 +30,14 @@ export async function POST(request: NextRequest) {
       }
     `;
 
+    const fallbackResponse: GenerateSkillsResponse = {
+      technicalSkills: ["TypeScript", "React", "Next.js", "Node.js", "REST APIs", "Git", "Database Management"],
+      softSkills: ["Problem Solving", "Communication", "Team Collaboration", "Agile Methodologies", "Critical Thinking"]
+    };
+
     const aiResponse = await generateText(prompt);
     if (!aiResponse) {
-      return NextResponse.json({ error: "Failed to generate skills" }, { status: 500 });
+      return NextResponse.json(fallbackResponse);
     }
 
     try {
@@ -41,10 +46,6 @@ export async function POST(request: NextRequest) {
       );
       return NextResponse.json(parsedData);
     } catch {
-      const fallbackResponse: GenerateSkillsResponse = {
-        technicalSkills: ["TypeScript", "React", "Next.js", "Node.js", "REST APIs", "Git", "Database Management"],
-        softSkills: ["Problem Solving", "Communication", "Team Collaboration", "Agile Methodologies", "Critical Thinking"]
-      };
       return NextResponse.json(fallbackResponse);
     }
   } catch (error: any) {

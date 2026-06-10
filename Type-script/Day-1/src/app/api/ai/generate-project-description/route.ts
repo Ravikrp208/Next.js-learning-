@@ -32,9 +32,18 @@ export async function POST(request: NextRequest) {
       }
     `;
 
+    const fallbackResponse: GenerateProjectDescriptionResponse = {
+      bulletPoints: [
+        `Developed "${title}" using ${technologies.join(", ") || "modern technologies"}, enabling streamlined performance.`,
+        `Implemented key modules like ${keyFeatures.join(", ") || "core service layer"} ensuring robust and secure user flows.`,
+        `Optimized system components to enhance responsiveness and improve database query execution times.`
+      ],
+      summary: `Designed and built ${title}, a comprehensive solution leveraging ${technologies.join(", ") || "modern tech stack"} to address complex requirements.`
+    };
+
     const aiResponse = await generateText(prompt);
     if (!aiResponse) {
-      return NextResponse.json({ error: "Failed to generate project description" }, { status: 500 });
+      return NextResponse.json(fallbackResponse);
     }
 
     try {
@@ -43,14 +52,6 @@ export async function POST(request: NextRequest) {
       );
       return NextResponse.json(parsedData);
     } catch {
-      const fallbackResponse: GenerateProjectDescriptionResponse = {
-        bulletPoints: [
-          `Developed "${title}" using ${technologies.join(", ") || "modern technologies"}, enabling streamlined performance.`,
-          `Implemented key modules like ${keyFeatures.join(", ") || "core service layer"} ensuring robust and secure user flows.`,
-          `Optimized system components to enhance responsiveness and improve database query execution times.`
-        ],
-        summary: `Designed and built ${title}, a comprehensive solution leveraging ${technologies.join(", ") || "modern tech stack"} to address complex requirements.`
-      };
       return NextResponse.json(fallbackResponse);
     }
   } catch (error: any) {

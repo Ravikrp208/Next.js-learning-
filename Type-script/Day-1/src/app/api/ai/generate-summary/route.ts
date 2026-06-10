@@ -31,9 +31,13 @@ export async function POST(request: NextRequest) {
       }
     `;
 
+    const fallbackResponse: GenerateSummaryResponse = {
+      summary: `Result-driven ${jobTitle} with a proven track record of success: ${experienceSummary}. Proficient in ${skills.slice(0, 5).join(", ")} and dedicated to delivering robust software architectures. Skilled at collaborating with cross-functional teams to build high-performance solutions.`
+    };
+
     const aiResponse = await generateText(prompt);
     if (!aiResponse) {
-      return NextResponse.json({ error: "Failed to generate professional summary" }, { status: 500 });
+      return NextResponse.json(fallbackResponse);
     }
 
     try {
@@ -42,9 +46,6 @@ export async function POST(request: NextRequest) {
       );
       return NextResponse.json(parsedData);
     } catch {
-      const fallbackResponse: GenerateSummaryResponse = {
-        summary: `Result-driven ${jobTitle} with a proven track record of success: ${experienceSummary}. Proficient in ${skills.slice(0, 5).join(", ")} and dedicated to delivering robust software architectures. Skilled at collaborating with cross-functional teams to build high-performance solutions.`
-      };
       return NextResponse.json(fallbackResponse);
     }
   } catch (error: any) {

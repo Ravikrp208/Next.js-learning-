@@ -31,9 +31,18 @@ export async function POST(request: NextRequest) {
       }
     `;
 
+    const fallbackResponse: GenerateExperienceResponse = {
+      suggestedBulletPoints: [
+        `Collaborated with cross-functional teams at ${company} to deliver high-quality features as a ${position}.`,
+        `Leveraged industry best practices to improve code quality and deployment efficiency.`,
+        `Designed and implemented key system enhancements that improved user experience and system response times.`
+      ],
+      improvedDescription: `Served as a ${position} at ${company}, leading key initiatives and engineering systems to improve overall software delivery.`
+    };
+
     const aiResponse = await generateText(prompt);
     if (!aiResponse) {
-      return NextResponse.json({ error: "Failed to generate experience content" }, { status: 500 });
+      return NextResponse.json(fallbackResponse);
     }
 
     try {
@@ -42,15 +51,6 @@ export async function POST(request: NextRequest) {
       );
       return NextResponse.json(parsedData);
     } catch {
-      // Fallback response if parser fails
-      const fallbackResponse: GenerateExperienceResponse = {
-        suggestedBulletPoints: [
-          `Collaborated with cross-functional teams at ${company} to deliver high-quality features as a ${position}.`,
-          `Leveraged industry best practices to improve code quality and deployment efficiency.`,
-          `Designed and implemented key system enhancements that improved user experience and system response times.`
-        ],
-        improvedDescription: `Served as a ${position} at ${company}, leading key initiatives and engineering systems to improve overall software delivery.`
-      };
       return NextResponse.json(fallbackResponse);
     }
   } catch (error: any) {
