@@ -1,0 +1,16 @@
+what is Browser ?
+Ans :- A web browser is a software application that allows users to access, retrieve, and display information from the World Wide Web.
+
+Definition:-
+A browser acts as an interface between the user and the internet. It requests web pages from web servers and displays them in a readable format.
+
+How Browsers Work
+1. User enters a URL (e.g., google.com)
+2. DNS translates URL to IP address
+3. Browser sends HTTP request to server
+4. Server sends HTML, CSS, JS files back
+5. Browser renders and displays the page
+
+Common Web Browsers
+Google Chrome, Mozilla Firefox, Microsoft Edge, Safari, and Opera.
+
