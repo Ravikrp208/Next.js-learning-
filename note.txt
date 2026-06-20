@@ -13,4 +13,4 @@ How Browsers Work
 
 Common Web Browsers
 Google Chrome, Mozilla Firefox, Microsoft Edge, Safari, and Opera.
-
+npx create-next-app@latest my-app
