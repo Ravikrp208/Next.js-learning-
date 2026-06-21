@@ -1,5 +1,5 @@
 import ProjectPage from "@/components/ProjectPage";
-import { projects } from "@/data/projects";
+import { projects } from "@/data/project";
 
 export default async function Page({ params }) {
   const { slug } = await params;

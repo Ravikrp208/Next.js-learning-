@@ -1,6 +1,6 @@
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/Nav";
 import "./globals.css";
-import SmoothScroller from "@/components/SmoothScroller";
+import SmoothScroller from "@/components/Smoothscroller";
 
 import { Inter, JetBrains_Mono } from "next/font/google";
 

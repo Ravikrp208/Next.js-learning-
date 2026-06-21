@@ -2,7 +2,7 @@
 
 import InfiniteCarousel from "@/components/InfiniteCarousel";
 import TextReveal from "@/components/TextReveal";
-import { projects } from "@/data/projects";
+import { projects } from "@/data/project";
 import { useRef } from "react";
 
 
