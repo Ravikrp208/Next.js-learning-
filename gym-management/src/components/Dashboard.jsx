@@ -141,6 +141,27 @@ export default function Dashboard({
         </div>
       </div>
 
+      {/* Gym Banner Section */}
+      <div className="relative overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-950 shadow-2xl h-44 sm:h-52 md:h-60 flex items-center p-6 sm:p-8 md:p-10">
+        <img 
+          src="/gym_banner.png" 
+          alt="Gym Interior" 
+          className="absolute inset-0 h-full w-full object-cover object-center opacity-65 scale-102 select-none"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/70 to-transparent"></div>
+        <div className="relative z-10 max-w-lg space-y-2">
+          <span className="rounded-full bg-lime-400/10 border border-lime-400/20 px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest text-lime-400 text-glow-lime">
+            Active Session
+          </span>
+          <h2 className="text-2xl font-black text-white sm:text-3xl md:text-4xl leading-tight">
+            LEANER. STRONGER. FASTER.
+          </h2>
+          <p className="text-xs sm:text-sm text-zinc-300 font-medium">
+            Manage your members, track attendance, and record fee collections seamlessly. Let's push limits today! ⚡
+          </p>
+        </div>
+      </div>
+
       {/* Stats Grid */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Total Members */}
