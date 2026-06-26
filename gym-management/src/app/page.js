@@ -6,13 +6,22 @@ import MembersList from "@/components/MembersList";
 import AttendanceLogs from "@/components/AttendanceLogs";
 import PaymentsList from "@/components/PaymentsList";
 import Settings from "@/components/Settings";
+import LandingPage from "@/components/LandingPage";
+import MemberDashboard from "@/components/MemberDashboard";
+import LoginModal from "@/components/LoginModal";
 import { db, DEFAULT_PLANS } from "@/utils/db";
 import { Dumbbell, RefreshCw, CloudLightning } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeTab, setActiveTab] = useState("home");
   const [quickAction, setQuickAction] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Auth States
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [selectedPlanForReg, setSelectedPlanForReg] = useState("");
+  const [initialModeForModal, setInitialModeForModal] = useState("login");
 
   // Database states
   const [members, setMembers] = useState([]);
@@ -32,6 +41,32 @@ export default function Home() {
       const savedSettings = db.getSettings();
       setSettings(savedSettings);
       setIsSynced(savedSettings.googleSheetsEnabled && !!savedSettings.appsScriptUrl);
+
+      // Load session
+      const savedSession = localStorage.getItem("fitos_session");
+      if (savedSession) {
+        try {
+          const session = JSON.parse(savedSession);
+          if (session.role === "member") {
+            const currentMembers = db.getMembers();
+            const match = currentMembers.find(m => m.id === session.memberData.id);
+            if (match) {
+              session.memberData = match;
+            }
+          }
+          setCurrentUser(session);
+          if (session.role === "admin") {
+            setActiveTab("dashboard");
+          } else if (session.role === "member") {
+            setActiveTab("member-portal");
+          }
+        } catch (err) {
+          console.error("Initial session parse error:", err);
+          setActiveTab("home");
+        }
+      } else {
+        setActiveTab("home");
+      }
 
       // If Google Sheets is enabled and URL is configured, pull latest data on load
       if (savedSettings.googleSheetsEnabled && savedSettings.appsScriptUrl) {
@@ -58,6 +93,29 @@ export default function Home() {
   // Sync state checker
   const updateSyncStatus = (updatedSettings) => {
     setIsSynced(updatedSettings.googleSheetsEnabled && !!updatedSettings.appsScriptUrl);
+  };
+
+  // Auth Handlers
+  const handleLoginSuccess = (user) => {
+    localStorage.setItem("fitos_session", JSON.stringify(user));
+    setCurrentUser(user);
+    if (user.role === "admin") {
+      setActiveTab("dashboard");
+    } else if (user.role === "member") {
+      setActiveTab("member-portal");
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("fitos_session");
+    setCurrentUser(null);
+    setActiveTab("home");
+  };
+
+  const handleOpenRegister = (planId = "") => {
+    setSelectedPlanForReg(planId);
+    setInitialModeForModal("register");
+    setLoginModalOpen(true);
   };
 
   // Database operations wrapped with state updates
@@ -152,11 +210,42 @@ export default function Home() {
         setActiveTab={setActiveTab} 
         gymName={settings.gymName || "Alpha Iron Gym"} 
         isSynced={isSynced}
+        currentUser={currentUser}
+        onLoginClick={() => {
+          setSelectedPlanForReg("");
+          setInitialModeForModal("login");
+          setLoginModalOpen(true);
+        }}
+        onLogout={handleLogout}
       />
 
       {/* Main Content Area */}
       <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        {activeTab === "dashboard" && (
+        {activeTab === "home" && (
+          <LandingPage 
+            plans={DEFAULT_PLANS}
+            onOpenLogin={() => {
+              setSelectedPlanForReg("");
+              setInitialModeForModal("login");
+              setLoginModalOpen(true);
+            }}
+            onOpenRegister={handleOpenRegister}
+            gymName={settings.gymName || "Alpha Iron Gym"}
+          />
+        )}
+
+        {activeTab === "member-portal" && currentUser?.role === "member" && (
+          <MemberDashboard 
+            user={currentUser}
+            attendance={attendance}
+            payments={payments}
+            plans={DEFAULT_PLANS}
+            onCheckIn={handleLogAttendance}
+            onLogout={handleLogout}
+          />
+        )}
+
+        {activeTab === "dashboard" && currentUser?.role === "admin" && (
           <Dashboard 
             members={members}
             attendance={attendance}
@@ -168,7 +257,7 @@ export default function Home() {
           />
         )}
 
-        {activeTab === "members" && (
+        {activeTab === "members" && currentUser?.role === "admin" && (
           <MembersList 
             members={members}
             plans={DEFAULT_PLANS}
@@ -185,7 +274,7 @@ export default function Home() {
           />
         )}
 
-        {activeTab === "attendance" && (
+        {activeTab === "attendance" && currentUser?.role === "admin" && (
           <AttendanceLogs 
             members={members}
             attendance={attendance}
@@ -196,7 +285,7 @@ export default function Home() {
           />
         )}
 
-        {activeTab === "payments" && (
+        {activeTab === "payments" && currentUser?.role === "admin" && (
           <PaymentsList 
             payments={payments}
             members={members}
@@ -207,7 +296,7 @@ export default function Home() {
           />
         )}
 
-        {activeTab === "settings" && (
+        {activeTab === "settings" && currentUser?.role === "admin" && (
           <Settings 
             settings={settings}
             onSaveSettings={handleSaveSettings}
@@ -228,6 +317,18 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* Login / Register Modal Popup */}
+      <LoginModal 
+        isOpen={loginModalOpen}
+        onClose={() => setLoginModalOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
+        members={members}
+        onAddMember={handleAddMember}
+        plans={DEFAULT_PLANS}
+        defaultPlanId={selectedPlanForReg}
+        initialMode={initialModeForModal}
+      />
     </div>
   );
 }
