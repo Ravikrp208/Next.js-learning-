@@ -2,6 +2,7 @@
 import React from "react";
 import { Dumbbell, ShieldCheck, Trophy, Sparkles, Flame, Users, Calendar, ArrowRight, Check } from "lucide-react";
 import WorkoutSlider from "./WorkoutSlider";
+import HeroImageSlider from "./HeroImageSlider";
 
 export default function LandingPage({ plans, onOpenLogin, onOpenRegister, gymName }) {
   
@@ -13,7 +14,7 @@ export default function LandingPage({ plans, onOpenLogin, onOpenRegister, gymNam
     },
     {
       icon: Trophy,
-      title: "State-Of-The-Art Equipment",
+      title: "State-Of-Running-Art Equipment",
       desc: "Work out with industry-leading cardio systems, isolated weight machines, and specialized Olympic platforms."
     },
     {
@@ -30,62 +31,8 @@ export default function LandingPage({ plans, onOpenLogin, onOpenRegister, gymNam
 
   return (
     <div className="space-y-20 pb-12">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-950/40 p-6 sm:p-12 md:p-20 flex flex-col items-center text-center space-y-6">
-        {/* Glow Spheres */}
-        <div className="absolute -top-40 -left-40 h-80 w-80 rounded-full bg-lime-400/10 blur-[100px]" />
-        <div className="absolute -bottom-40 -right-40 h-80 w-80 rounded-full bg-lime-400/5 blur-[100px]" />
-
-        <span className="rounded-full bg-lime-400/10 border border-lime-400/20 px-4 py-1 text-xs font-black uppercase tracking-widest text-lime-400 text-glow-lime animate-pulse-glow">
-          ⚡ Welcome to {gymName}
-        </span>
-        
-        <h1 className="max-w-4xl text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-none uppercase">
-          Build Your <span className="text-lime-400 text-glow-lime">Ultimate Self</span> & Conquer Limits
-        </h1>
-        
-        <p className="max-w-2xl text-sm sm:text-base text-zinc-400 font-medium">
-          Step into a state-of-the-art gym environment where elite trainers, premium equipment, and syncable workout logs help you unleash your absolute physical peak. No login required to browse!
-        </p>
-
-        {/* Hero CTA buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 pt-4 relative z-10 w-full justify-center sm:w-auto">
-          <button
-            onClick={() => onOpenRegister()}
-            className="flex items-center justify-center gap-2 rounded-xl bg-lime-400 px-8 py-4 text-sm font-extrabold text-zinc-950 hover:bg-lime-300 transition-all cursor-pointer glow-lime"
-          >
-            <span>Join Now & Log Workouts</span>
-            <ArrowRight className="h-4.5 w-4.5 stroke-[2.5]" />
-          </button>
-          
-          <a
-            href="#workouts-section"
-            className="flex items-center justify-center gap-2 rounded-xl border border-zinc-800 hover:border-zinc-700 bg-zinc-900/30 hover:bg-zinc-900/80 px-8 py-4 text-sm font-bold text-white transition-all cursor-pointer"
-          >
-            <span>Explore Workouts</span>
-          </a>
-        </div>
-
-        {/* Stats strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 pt-12 border-t border-zinc-900/80 w-full mt-12">
-          <div className="space-y-1">
-            <p className="text-3xl sm:text-4xl font-black text-white">500+</p>
-            <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold">Active Members</p>
-          </div>
-          <div className="space-y-1">
-            <p className="text-3xl sm:text-4xl font-black text-lime-400 text-glow-lime">15+</p>
-            <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold">Pro Trainers</p>
-          </div>
-          <div className="space-y-1">
-            <p className="text-3xl sm:text-4xl font-black text-white">30+</p>
-            <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold">New Workouts</p>
-          </div>
-          <div className="space-y-1">
-            <p className="text-3xl sm:text-4xl font-black text-lime-400 text-glow-lime">99.8%</p>
-            <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold">Satisfaction</p>
-          </div>
-        </div>
-      </section>
+      {/* Full-width advertisement / background image slider */}
+      <HeroImageSlider onOpenRegister={onOpenRegister} gymName={gymName} />
 
       {/* Workout Slider Section */}
       <section id="workouts-section" className="space-y-6">
