@@ -1,8 +1,23 @@
 "use client";
 import React from "react";
 import { Dumbbell, ShieldCheck, Trophy, Sparkles, Flame, Users, Calendar, ArrowRight, Check } from "lucide-react";
+import { motion } from "framer-motion";
 import WorkoutSlider from "./WorkoutSlider";
 import HeroImageSlider from "./HeroImageSlider";
+
+const cardStagger = {
+  initial: { opacity: 0, y: 30 },
+  whileInView: (idx) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      delay: idx * 0.1,
+      ease: "easeOut"
+    }
+  }),
+  viewport: { once: true, margin: "-80px" }
+};
 
 export default function LandingPage({ plans, onOpenLogin, onOpenRegister, gymName }) {
   
@@ -35,7 +50,14 @@ export default function LandingPage({ plans, onOpenLogin, onOpenRegister, gymNam
       <HeroImageSlider onOpenRegister={onOpenRegister} gymName={gymName} />
 
       {/* Workout Slider Section */}
-      <section id="workouts-section" className="space-y-6">
+      <motion.section 
+        id="workouts-section" 
+        className="space-y-6"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+      >
         <div className="text-center sm:text-left space-y-2">
           <h2 className="text-3xl font-extrabold text-white tracking-tight uppercase sm:text-4xl">
             Featured Workout Programs
@@ -47,11 +69,17 @@ export default function LandingPage({ plans, onOpenLogin, onOpenRegister, gymNam
         
         {/* Render our custom slider */}
         <WorkoutSlider />
-      </section>
+      </motion.section>
 
       {/* Core Services Section */}
       <section className="space-y-10">
-        <div className="text-center space-y-2">
+        <motion.div 
+          className="text-center space-y-2"
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.5 }}
+        >
           <span className="text-[10px] font-extrabold uppercase tracking-widest text-lime-400 text-glow-lime">
             Our Features
           </span>
@@ -61,14 +89,19 @@ export default function LandingPage({ plans, onOpenLogin, onOpenRegister, gymNam
           <p className="text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto">
             We provide custom facilities and tools to help you hit your peak safely and systematically.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((feat, idx) => {
             const Icon = feat.icon;
             return (
-              <div 
+              <motion.div 
                 key={idx}
+                custom={idx}
+                initial="initial"
+                whileInView="whileInView"
+                viewport={{ once: true, margin: "-80px" }}
+                variants={cardStagger}
                 className="glass-card glass-card-hover rounded-2xl p-6 space-y-4"
               >
                 <div className="h-10 w-10 rounded-xl bg-lime-950/20 text-lime-400 border border-lime-800/20 flex items-center justify-center">
@@ -78,7 +111,7 @@ export default function LandingPage({ plans, onOpenLogin, onOpenRegister, gymNam
                   <h3 className="text-sm font-bold text-white uppercase tracking-wider">{feat.title}</h3>
                   <p className="text-xs text-zinc-400 leading-relaxed">{feat.desc}</p>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
@@ -86,7 +119,13 @@ export default function LandingPage({ plans, onOpenLogin, onOpenRegister, gymNam
 
       {/* Membership Pricing Section */}
       <section id="pricing-section" className="space-y-10">
-        <div className="text-center space-y-2">
+        <motion.div 
+          className="text-center space-y-2"
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.5 }}
+        >
           <span className="text-[10px] font-extrabold uppercase tracking-widest text-lime-400 text-glow-lime">
             Pricing Plans
           </span>
@@ -96,14 +135,19 @@ export default function LandingPage({ plans, onOpenLogin, onOpenRegister, gymNam
           <p className="text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto">
             Flexible membership plans made to accommodate your schedule and focus.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {plans.map((p) => {
+          {plans.map((p, idx) => {
             const isElite = p.id === "p3"; // Highlight Annual Elite
             return (
-              <div 
+              <motion.div 
                 key={p.id}
+                custom={idx}
+                initial="initial"
+                whileInView="whileInView"
+                viewport={{ once: true, margin: "-80px" }}
+                variants={cardStagger}
                 className={`glass-card rounded-3xl p-6 flex flex-col justify-between relative transition-all duration-300 ${
                   isElite 
                     ? "border-2 border-lime-400/80 shadow-lime shadow-xl scale-102 lg:scale-105" 
@@ -111,7 +155,7 @@ export default function LandingPage({ plans, onOpenLogin, onOpenRegister, gymNam
                 }`}
               >
                 {isElite && (
-                  <span className="absolute -top-3.5 right-6 rounded-full bg-lime-400 text-zinc-950 px-3 py-0.5 text-[9px] font-black uppercase tracking-widest glow-lime">
+                  <span className="absolute -top-3.5 right-6 rounded-full bg-lime-400 text-zinc-950 px-3 py-0.5 text-[9px] font-black uppercase tracking-widest glow-lime z-[5]">
                     Most Popular
                   </span>
                 )}
@@ -164,14 +208,20 @@ export default function LandingPage({ plans, onOpenLogin, onOpenRegister, gymNam
                   <span>Select Plan</span>
                   <ArrowRight className="h-3.5 w-3.5" />
                 </button>
-              </div>
+              </motion.div>
             );
           })}
         </div>
       </section>
 
       {/* CTA Final conversion Section */}
-      <section className="relative overflow-hidden rounded-3xl border border-lime-400/20 bg-lime-400/5 p-8 sm:p-12 flex flex-col md:flex-row items-center justify-between gap-6">
+      <motion.section 
+        className="relative overflow-hidden rounded-3xl border border-lime-400/20 bg-lime-400/5 p-8 sm:p-12 flex flex-col md:flex-row items-center justify-between gap-6"
+        initial={{ opacity: 0, scale: 0.95 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         <div className="space-y-2 text-center md:text-left">
           <h2 className="text-2xl font-black text-white uppercase tracking-tight sm:text-3xl">
             Start logging your fitness streak today
@@ -186,7 +236,7 @@ export default function LandingPage({ plans, onOpenLogin, onOpenRegister, gymNam
         >
           <span>Claim Your Account</span>
         </button>
-      </section>
+      </motion.section>
 
     </div>
   );

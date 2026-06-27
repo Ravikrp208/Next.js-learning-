@@ -41,7 +41,7 @@ const SLIDES = [
   },
   {
     id: 6,
-    image: "https://images.unsplash.com/photo-1605296867304-46d5465a25f1?q=80&w=1600&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=1600&auto=format&fit=crop",
     tag: "Core & Deadlift",
     title: "Build True Absolute Power",
     desc: "Master proper deadlift mechanics and lower back bracing to establish heavy structural strength."
@@ -99,24 +99,30 @@ export default function HeroImageSlider({ onOpenRegister, gymName }) {
     setCurrentIndex((prev) => (prev === SLIDES.length - 1 ? 0 : prev + 1));
   };
 
-  const fadeVariants = {
+  const slideVariants = {
     enter: (dir) => ({
+      x: dir > 0 ? "100%" : "-100%",
       opacity: 0,
-      scale: 1.03
+      scale: 1.05
     }),
     center: {
+      x: 0,
       opacity: 1,
       scale: 1,
       transition: {
-        opacity: { duration: 0.6, ease: "easeInOut" },
+        x: { type: "spring", stiffness: 220, damping: 28 },
+        opacity: { duration: 0.6 },
         scale: { duration: 0.8, ease: "easeOut" }
       }
     },
     exit: (dir) => ({
+      x: dir < 0 ? "100%" : "-100%",
       opacity: 0,
-      scale: 0.98,
+      scale: 0.95,
       transition: {
-        opacity: { duration: 0.4, ease: "easeInOut" }
+        x: { type: "spring", stiffness: 220, damping: 28 },
+        opacity: { duration: 0.5 },
+        scale: { duration: 0.6, ease: "easeIn" }
       }
     })
   };
@@ -128,54 +134,79 @@ export default function HeroImageSlider({ onOpenRegister, gymName }) {
       onMouseLeave={() => setIsAutoPlay(true)}
     >
       {/* Background Slides */}
-      <div className="absolute inset-0 w-full h-full">
+      <div className="absolute inset-0 w-full h-full overflow-hidden">
         <AnimatePresence initial={false} custom={direction} mode="popLayout">
           <motion.div
             key={currentIndex}
             custom={direction}
-            variants={fadeVariants}
+            variants={slideVariants}
             initial="enter"
             animate="center"
             exit="exit"
             className="absolute inset-0 w-full h-full"
           >
-            <img 
+            <motion.img 
               src={SLIDES[currentIndex].image} 
               alt={SLIDES[currentIndex].title}
               className="w-full h-full object-cover object-center"
+              initial={{ scale: 1.15 }}
+              animate={{ scale: 1.0 }}
+              transition={{ duration: 6, ease: "easeOut" }}
             />
           </motion.div>
         </AnimatePresence>
       </div>
 
       {/* Dark Vignette Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-zinc-950/50" />
-      <div className="absolute inset-0 bg-black/35" />
+      <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-zinc-950/50 z-[2]" />
+      <div className="absolute inset-0 bg-black/35 z-[2]" />
 
       {/* Content Card Overlay */}
-      <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-12 md:px-20 max-w-4xl space-y-6 z-10 text-left">
-        <motion.div
-          key={currentIndex}
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="space-y-4"
-        >
-          <span className="inline-flex rounded-full bg-lime-400/20 border border-lime-400/30 px-3.5 py-1 text-[10px] font-black uppercase tracking-widest text-lime-400 text-glow-lime">
+      <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-12 md:px-20 max-w-4xl space-y-4 z-10 text-left">
+        <div className="overflow-hidden py-0.5">
+          <motion.span
+            key={`tag-${currentIndex}`}
+            initial={{ y: "100%", opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="inline-flex rounded-full bg-lime-400/20 border border-lime-400/30 px-3.5 py-1 text-[10px] font-black uppercase tracking-widest text-lime-400 text-glow-lime"
+          >
             ⚡ {SLIDES[currentIndex].tag}
-          </span>
-          
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-tight uppercase max-w-3xl">
+          </motion.span>
+        </div>
+        
+        <div className="overflow-hidden py-1">
+          <motion.h1 
+            key={`title-${currentIndex}`}
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.8, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+            className="text-3xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-none uppercase max-w-3xl"
+          >
             {SLIDES[currentIndex].title}
-          </h1>
-          
-          <p className="text-sm sm:text-base text-zinc-300 font-medium max-w-2xl leading-relaxed">
+          </motion.h1>
+        </div>
+        
+        <div className="overflow-hidden pb-1">
+          <motion.p
+            key={`desc-${currentIndex}`}
+            initial={{ y: "50%", opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
+            className="text-sm sm:text-base text-zinc-300 font-medium max-w-2xl leading-relaxed"
+          >
             {SLIDES[currentIndex].desc}
-          </p>
-        </motion.div>
+          </motion.p>
+        </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-wrap gap-4 pt-2 relative z-20">
+        <motion.div
+          key={`buttons-${currentIndex}`}
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.26, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-wrap gap-4 pt-2 relative z-20"
+        >
           <button
             onClick={() => onOpenRegister()}
             className="flex items-center justify-center gap-2 rounded-xl bg-lime-400 px-6 py-3.5 text-xs sm:text-sm font-extrabold text-zinc-950 hover:bg-lime-300 transition-all cursor-pointer glow-lime uppercase tracking-wider"
@@ -190,7 +221,7 @@ export default function HeroImageSlider({ onOpenRegister, gymName }) {
           >
             <span>Browse Workouts</span>
           </a>
-        </div>
+        </motion.div>
       </div>
 
       {/* Navigation Arrows */}
